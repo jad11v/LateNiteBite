@@ -1,0 +1,262 @@
+
+/*.col-1-8:hover {
+	background-color: #CCFF66;
+	
+}
+
+.grid:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+ *:after, *:before {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}*/
+
+body {
+
+	background-image:url(../images/6Kd8s3.png) repeat-y;
+	background-repeat: repeat-x;
+}
+
+h3  {
+	text-align: center;
+
+}
+#mobile {
+  text-align: center; 
+}
+
+p {
+	text-align: center;
+  /*padding-top: 3.5%;*/
+}
+.space{
+	
+	width: 0px;
+}
+#scroll{
+	height: 500px;
+	overflow: auto;
+}
+div#rowDesc {
+  width:500px;
+  height:480px;
+  margin: 0 auto 0 auto;
+}
+
+.mode {
+
+	padding-left: 5em;
+
+}
+.container {
+	
+	width: 100%;
+	
+}
+/* REQUIRED CSS: change your reflow breakpoint here (35em below) */
+@media ( max-width: 50em ) {
+
+  /* uncomment out the line below if you don't want the sortable headers to show */
+  /* table.ui-table-reflow thead { display: none; } */
+
+  /* css for reflow & reflow2 widgets */
+  .ui-table-reflow td,
+  .ui-table-reflow th {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    float: right;
+    /* if not using the stickyHeaders widget (not the css3 version)
+     * the "!important" flag, and "height: auto" can be removed */
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* reflow widget only */
+  .ui-table-reflow tbody td[data-title]:before {
+    color: #2780E3;
+    font-size: 1em;
+    content: attr(data-title);
+    float: left;
+    white-space: pre-wrap;
+    text-align: bottom;
+    display: inline-block;
+  	}
+.ui-table-reflow tbody td[data-title]:after {
+    
+  padding-right:20px;
+
+}
+div#rowDesc {
+  width: 250px;
+  height:200px;
+  margin: 0 auto 0 auto;
+}
+
+ #bold {
+ 	font-size: 1.3em;
+  font-weight: bold;
+ 	
+ }
+ .rowborder {
+ 	border-style: solid;
+    border-width: 5px;
+    border-color: #2780E3;
+    border-radius: 25px;
+    column-width: auto;
+ }
+ 
+  /* reflow2 widget only */
+  table.ui-table-reflow .ui-table-cell-label.ui-table-cell-label-top {
+    display: block;
+    padding: .4em 0;
+    margin: .4em 0;
+    text-transform: uppercase;
+    font-size: .9em;
+    font-weight: 400;
+  }
+  table.ui-table-reflow .ui-table-cell-label {
+    padding: .4em;
+    min-width: 30%;
+    display: inline-block;
+    margin: -.4em 1em -.4em -.4em;
+  }
+
+  
+} /* end media query */
+
+/* reflow2 widget */
+.ui-table-reflow .ui-table-cell-label {
+  display: none;
+}
+
+#vehicle #rowName {
+	float: left;
+
+}
+#rowName {
+	float: left;
+	width: 50%;
+}
+
+tr:nth-child(even)
+{
+	background-color: white
+}
+
+.cd-top {
+  display: inline-block;
+  height: 40px;
+  width: 40px;
+  position: fixed;
+  bottom: 40px;
+  right: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  /* image replacement properties */
+  overflow: hidden;
+  text-indent: 100%;
+  white-space: nowrap;
+  background: url(../images/cd-top-arrow.svg) no-repeat center 50%;
+  background-color: #2780E3;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: opacity .3s 0s, visibility 0s .3s;
+  -moz-transition: opacity .3s 0s, visibility 0s .3s;
+  transition: opacity .3s 0s, visibility 0s .3s;
+}
+.cd-top.cd-is-visible, .cd-top.cd-fade-out, .no-touch .cd-top:hover {
+  -webkit-transition: opacity .3s 0s, visibility 0s 0s;
+  -moz-transition: opacity .3s 0s, visibility 0s 0s;
+  transition: opacity .3s 0s, visibility 0s 0s;
+}
+.cd-top.cd-is-visible {
+  /* the button becomes visible */
+  visibility: visible;
+  opacity: 1;
+}
+.cd-top.cd-fade-out {
+  /* if the user keeps scrolling down, the button is out of focus and becomes less visible */
+  opacity: .5;
+}
+.no-touch .cd-top:hover {
+  background-color: #e86256;
+  opacity: 1;
+}
+
+@media only screen and (min-width: 768px) {
+  .cd-top {
+    right: 20px;
+    bottom: 20px;
+  }
+  #checkreviews {
+margin-right: 65%;
+background-color: #FFD700;
+}
+
+
+}
+@media only screen and (min-width: 1024px) {
+  .cd-top {
+    height: 60px;
+    width: 60px;
+    right: 30px;
+    bottom: 30px;
+  }
+}
+
+@media (max-width: 600px) {
+  
+  .cd-top
+  {
+    
+    margin-right: 10px;
+     
+  }
+  #checkreviews{
+    background-color: #FFD700;
+    margin-right: 35%;
+  }
+  
+}
+#reviewtable{
+  border-collapse:separate; 
+  border-spacing:1em;
+}
+#bold {
+  font-size: 1.5em;
+  font-weight: 500;
+  
+ }
+
+ .reviewtext{
+  margin: 15%;
+ }
+
+ .reviewrating{
+  width: 9%;
+ }
+ .reviewrows{
+  border-style: solid;
+  border-width: 5px;
+}
+
+.rowSize{
+  font-size: 1.2em;
+  text-align: center;
+
+}
+tr { 
+  cursor: pointer; 
+  cursor: hand; 
+}
+
+#activeBar{
+  background-color: #2780E3;
+}
+
+

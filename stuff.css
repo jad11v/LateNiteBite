@@ -1,0 +1,17 @@
+ .container {
+       position:relative;
+   }
+
+ .content {
+       position:relative;
+       color:White;
+       
+   }
+
+html {
+       
+       background-image: url(../images/homeback.jpg);
+
+p{font-size: 250%;}
+
+}

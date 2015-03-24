@@ -1,0 +1,39 @@
+ .container {
+       position:relative;
+   }
+
+ .content {
+       position:relative;
+       color:White;
+       
+   }
+
+html {
+       
+       background-image: url(../images/homeback.jpg);
+}
+
+.login-form {
+
+	width: 300px;
+}
+
+.login-form .content {
+
+	padding: 0 30px 25px 25px;
+}
+
+
+
+.login-form .header span {
+
+	font-size: 11px;
+}
+
+.heading {
+
+	text-align: center;
+	padding:10px 0;
+
+
+}
