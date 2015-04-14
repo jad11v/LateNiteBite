@@ -25,6 +25,7 @@
 
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/css/bootstrap-select.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Asap' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="//brick.a.ssl.fastly.net/Playfair+Display:400">
     <link rel="stylesheet" type="text/css" href="css/layout.css">
     <title>Late Nite Bite</title>
@@ -34,13 +35,13 @@
       <div class="modal-dialog">
         <div class="modal-content">
          <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h4 class="modal-title" id="rowName"></h4>
-            <select id="vehicle" class="selectpicker">
+        <h4 class="modal-title" id="rowName"></h4>
+         <select id="vehicle" class="selectpicker">
                 <option value="driving" data-content='<i class="fa fa-car"> <span class="mode">Driving</span></i>'></option>
                 <option value="bicycling" data-content='<i class="fa fa-bicycle"> <span class="mode">Biking</span></i>'></option>
                 <option value="walking" data-content='<i class="fa fa-paw"> <span class="mode">Walking</span></i>'></option>
             </select>
+        
       </div>
       <div id="rowDesc">
       <div class="modal-body">
@@ -48,8 +49,9 @@
         </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" id="checkreviews" onclick="parseReviews();" href="#">Reviews </button>
+        <div id="phoneNumber"> </div>
         <button type="button" class="btn btn-primary" id="navigator" href="#" role="button" onclick ="navigate();">Navigate</button>
-        </div>
+         </div>
     </div>
   </div>
 </div>
@@ -69,21 +71,22 @@
       </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <div id="phoneNumber"></div>
           <button type="button" id="reviewBack" class="btn btn-primary" onclick="flip(true);">Back</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
    <div class="container">
-    <h3 id="click">Restaurants currently open sorted by popularity</h3>
-    <h4 id="mobile"></h4>
+    <h3 id="click">Places to eat, that are open right now.</h3>
+    <h4 id="mobile">Arranged by distance from your location.</h4>
     <div class="row">
-    <div class="col-md-2"><p>Hi.</p></div>
+    <div class="col-md-2"><p></p></div>
     <div class="col-md-8">
      <div class="progress progress-striped active" id="bar">
       <div class="progress-bar" id="activeBar"></div>
       </div>
-        <table class="ui-table-reflow table-striped tablesorter table table-hover table-bordered" id="dataTable">
+        <table class="ui-table-reflow tablesorter table table-hover" id="dataTable">
             <colgroup>
               <col width="450"/>
             </colgroup>
@@ -95,14 +98,12 @@
               </tr>
             </thead>
             <tbody id="firstData"></tbody>
-            <tbody id="secondData"></tbody>
-            <tbody id="thirdData"></tbody>
-          </table>
+            </table>
       </div>
     <div class="col-md-2">
      <div id="map" style="overflow: visible;" ></div>
      <p id="trigger">Joe Deleeuw </p>
-     <p>twitter: @j_deleeuw</p>
+     <p>twitter: @jdeleeu</p>
      <p>github: jad11v</p>
     </div>
     <div class="clearfix visible-md-block"></div>

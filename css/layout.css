@@ -34,6 +34,12 @@ p {
 	text-align: center;
   /*padding-top: 3.5%;*/
 }
+
+/*grabs direct child of rowname, which is modal title */
+#rowName > p {
+  text-align: left;
+}
+
 .space{
 	
 	width: 0px;
@@ -58,13 +64,9 @@ div#rowDesc {
 	width: 100%;
 	
 }
-/* REQUIRED CSS: change your reflow breakpoint here (35em below) */
 @media ( max-width: 50em ) {
 
-  /* uncomment out the line below if you don't want the sortable headers to show */
-  /* table.ui-table-reflow thead { display: none; } */
 
-  /* css for reflow & reflow2 widgets */
   .ui-table-reflow td,
   .ui-table-reflow th {
     -webkit-box-sizing: border-box;
@@ -87,11 +89,7 @@ div#rowDesc {
     text-align: bottom;
     display: inline-block;
   	}
-.ui-table-reflow tbody td[data-title]:after {
-    
-  padding-right:20px;
 
-}
 div#rowDesc {
   width: 250px;
   height:200px;
@@ -100,7 +98,7 @@ div#rowDesc {
 
  #bold {
  	font-size: 1.3em;
-  font-weight: bold;
+  font-weight: 600;
  	
  }
  .rowborder {
@@ -139,10 +137,6 @@ div#rowDesc {
 	float: left;
 
 }
-#rowName {
-	float: left;
-	width: 50%;
-}
 
 tr:nth-child(even)
 {
@@ -154,8 +148,8 @@ tr:nth-child(even)
   height: 40px;
   width: 40px;
   position: fixed;
-  bottom: 40px;
-  right: 10px;
+  bottom: 20px;
+  right: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   /* image replacement properties */
   overflow: hidden;
@@ -194,12 +188,28 @@ tr:nth-child(even)
     bottom: 20px;
   }
   #checkreviews {
-margin-right: 65%;
-background-color: #FFD700;
+    float:left;
+    background-color: #FFD700;
+}
+  #phoneNumber {
+    padding-right: 25%;
+    font-size: 1.2em;
+  }
+
+  #realPhone
+  {
+    float:left;
+    padding-left: 34%;
+  }
+   #rowName {
+  float: left;
+  width: 40%;
+}
+}
+.ratingSize, .distanceSize{
+  font-size: 1.2em;
 }
 
-
-}
 @media only screen and (min-width: 1024px) {
   .cd-top {
     height: 60px;
@@ -207,29 +217,17 @@ background-color: #FFD700;
     right: 30px;
     bottom: 30px;
   }
-}
 
-@media (max-width: 600px) {
-  
-  .cd-top
-  {
-    
-    margin-right: 10px;
-     
-  }
-  #checkreviews{
-    background-color: #FFD700;
-    margin-right: 35%;
-  }
-  
-}
+ }
+
+
 #reviewtable{
   border-collapse:separate; 
   border-spacing:1em;
 }
 #bold {
   font-size: 1.5em;
-  font-weight: 500;
+  font-weight: 600;
   
  }
 
@@ -245,18 +243,97 @@ background-color: #FFD700;
   border-width: 5px;
 }
 
-.rowSize{
-  font-size: 1.2em;
-  text-align: center;
 
-}
 tr { 
   cursor: pointer; 
-  cursor: hand; 
-}
+  }
 
 #activeBar{
   background-color: #2780E3;
 }
+
+p,h1, h2, h3, h4, h5, h6, #name, #rating, #distance{
+  font-family: Asap;
+}
+
+#dataTable {
+
+border-collapse: separate;
+border-spacing: 20px;
+}
+.table > tbody > tr > td, .table > thead > tr > th {
+  border-top: none;
+  border-bottom: 1px solid #ddd;
+}
+
+.table > tbody > tr > td:hover {
+  background-color: #2780E3;
+}
+
+@media (max-width: 668px) {
+  
+#withDescription{
+    padding-left: 4%;
+  }
+
+.ratingSize > p {
+    padding-right: 20%;
+    font-size: 1.2em
+  }
+.distanceSize > p:first-child {
+  padding-right: 24%;
+}
+#dataTable
+{
+  border: none;
+  border-spacing: 15px;
+  border-collapse: separate; 
+}
+
+table.table.table-striped tr.rowborder td {
+    background-color: transparent;
+
+}
+tbody > tr > td:nth-child(3)
+{
+  border-bottom: 3px solid #ddd;
+}
+tr.rowborder td 
+  .cd-top
+  {
+    
+    margin-right: 10px;
+     
+  }
+  #checkreviews{
+    background-color: #FFD700;
+    float:left;
+    
+  }
+  
+  #phoneNumber{
+    margin-left: 4%;
+    float:left;
+    font-size: 1.2em;
+    line-height: 1.9;
+  }
+  #bold {
+    font-size: 1.8em;
+  }
+
+}
+
+@media (max-width: 800px) {
+  
+  .table > tbody > tr > td:hover, .table > tbody > tr:hover  {
+  background-color: transparent;
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: transparent;
+}
+
+}
+
 
 
