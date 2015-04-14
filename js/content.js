@@ -21,58 +21,79 @@
     Windows: function() { return navigator.userAgent.match(/IEMobile/i); }, 
     any: function() { return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows()); } };
   function clickModal(){
-    $("#firstData > *, #secondData > *, #thirdData > *").click(function()
+    $("#firstData > *").click(function()
     {
       
       var myservice;
+      var combinedDescription;
+      var phoneRequest;
       $('#myModal').modal({
         keyboard: true
       });
       tableDesc = $(this).children();
-      //console.log(tableDesc);
+      
       for(var i = 0; i < totalLocations.length; i++)
       {
-        if(totalLocations[i].distance == tableDesc[2].innerHTML)
+        if(tableDesc[2].childNodes[1] == undefined )
+          combinedDescription = tableDesc[2].childNodes[0].innerHTML;
+        else
         {
+          combinedDescription = tableDesc[2].childNodes[0].innerHTML + tableDesc[2].childNodes[1].outerHTML;
+        }
+
+        if(totalLocations[i].distance == combinedDescription)
+        {
+          
           currLat = totalLocations[i].geometry.location.k;
           currLong = totalLocations[i].geometry.location.D;
-          
-          }
+          var phoneRequest = 
+          {
+            placeId: totalLocations[i].place_id
+          };
+          break;
         }
+      }
     //location from array of total locations to instantiate map. 
     var restLocation = new google.maps.LatLng(currLat, currLong);
     //finding average latitutde and longitute for map center
     var centerLocation = new google.maps.LatLng((currLat + latitude)/2, (currLong + longitude)/2);
+    
     modalMap = new google.maps.Map(document.getElementById('rowDesc'),{
           center: centerLocation,
-          zoom: 15
+          zoom: 13
         });
-    var marker = new google.maps.Marker({ 
-      position: restLocation,
-      map: modalMap
-    });
-     
+
+    
+    var targetDistance = getDistanceFromLatLonInKm(latitude,longitude,currLat,currLong);
+    if(targetDistance > 4.0)
+    {
+      zoomLevel = 12;
+      modalMap.setZoom(zoomLevel);
+    }
+
+   
      var origMarker = new google.maps.Marker({ 
       position: userLocation,
-      map: modalMap
+      map: modalMap,
+      icon:  "../images/mapMarkers/green_MarkerA.png"
     });
+     var marker = new google.maps.Marker({ 
+      position: restLocation,
+      map: modalMap,
+      icon: "../images/mapMarkers/red_MarkerB.png"
+    });
+
+      service = new google.maps.places.PlacesService(map);
+      service.getDetails(phoneRequest,function(results){
+        
+        document.getElementById("phoneNumber").innerHTML = "<a id=\"realPhone\"href=\"tel:" + results.international_phone_number +  "\"/>" + results.international_phone_number + "</a>";
+        
+        
+      });
+
+document.getElementById("rowName").innerHTML = tableDesc[0].innerHTML;
     
-
-    document.getElementById("rowName").innerHTML = tableDesc[0].innerHTML;
-    
-  function resizeMap() {
-   if(typeof modalMap =="undefined") return;
-   setTimeout( function(){resizingMap();} , 400);
-}
-
-function resizingMap() {
-   
-   var center = modalMap.getCenter();
-   google.maps.event.trigger(modalMap, "resize");
-   modalMap.setCenter(center); 
-    }
-  });
-
+});
 
 }
 
@@ -84,11 +105,14 @@ $(document).ready(function(){
 
   $(document).ready(function() {
   $("#dataTable").tablesorter({
-    sortList: [[0,0]],     
+    sortList: [[2,0]],     
     cssAsc: 'headerSortUp',   
     cssDesc: 'headerSortDown', 
     cssHeader: 'header',
     widgets : ['stickyHeaders','reflow'],
+    headers: {
+      1: {sorter: "digit", string: "zero"}
+    },
     widgetOptions : {
     stickyHeaders_attachTo : '.table-responsive',
     reflow_className    : 'ui-table-reflow',
@@ -99,13 +123,13 @@ $(document).ready(function(){
 });
 
     document.getElementById("name").onclick = function(){
-    document.getElementById("click").innerHTML = "Restaurants currently open sorted by name";
+    document.getElementById("mobile").innerHTML = "Arranged by name.";
   }  
     document.getElementById("rating").onclick = function(){
-    document.getElementById("click").innerHTML = "Restaurants currently open sorted by rating";
+    document.getElementById("mobile").innerHTML = "Arranged by rating.";
   }
     document.getElementById("distance").onclick = function(){
-    document.getElementById("click").innerHTML = "Restaurants currently open sorted by distance";
+    document.getElementById("mobile").innerHTML = "Arranged by distance from your location.";
   }
 
   if(navigator.geolocation == undefined)
@@ -134,7 +158,9 @@ function changeSearch(){
     longitude = position.coords.longitude;
     //console.log("my latitude "+ latitude);
     //console.log("my longitude "+ longitude);
+    
     initialize();
+    
   }
   function error()
   {
@@ -142,15 +168,15 @@ function changeSearch(){
     document.getElementById("mobile").innerHTML = "Try enabling location services on your device.";
   }
 
-  function initialize() 
+function initialize() 
   {
-      itemCount = 0;
       userLocation = new google.maps.LatLng(latitude,longitude);
+      itemCount = 0;
       var request = 
         {
           /*don't be a dummy tallahassee is a variable name, but its not that anymore, but you want this to be here forever */
           location: userLocation,
-          radius: '12000',
+          radius: '6000',
           types: ['restaurant'],
           openNow: true 
         };
@@ -159,8 +185,26 @@ function changeSearch(){
     service.nearbySearch(request,callback);   
   }
 
-function callback(results, status, info) 
+function grabclosePlaces()
+{
+  var request = 
+        {
+          //don't be a dummy tallahassee is a variable name, but its not that anymore, but you want this to be here forever 
+          location: userLocation,
+          radius: '1200',
+          types: ['restaurant'],
+          openNow: true 
+        };
+
+    service = new google.maps.places.PlacesService(map);
+    service.nearbySearch(request,callback);   
+}
+
+
+ 
+  function callback(results, status, info) 
   {
+    console.log("results" + results + "/n" + "status" + status );
     
     if(info.hasNextPage === true) 
         {
@@ -172,9 +216,111 @@ function callback(results, status, info)
       if (status == google.maps.places.PlacesServiceStatus.OK) 
         {
          callCount +=1;
+         
+         if(callCount < 7)
          parseLocations(results,callCount,info);
         }
         
+  }
+  function parseLocations(locations,callCount,info)
+  {
+    //this attaches a back to top event when the up arrow is pressed.
+   
+   changeSearch();
+    var counter = 0;
+    if (callCount == 2)
+    {
+        counter = 20;
+    }
+    else if (callCount == 3)
+    {
+      counter = 40;
+    }
+    //console.log("call count" + counter);
+    //~ Use this whenever you want to display object/array arguments.
+    
+    for(var i = 0; i < locations.length; i++)
+      {
+        for (var j = 0; j < totalLocations.length; j++)
+          {
+            if (locations[i].place_id == totalLocations[j].place_id)
+            {
+              locations[i]["id"] = "rid";  
+              
+            }
+          }       
+      }
+    
+    var currentDistances = calculateDistance(locations,latitude,longitude);
+    for (var i = 0; i < locations.length; i++, counter++)
+        { 
+          console.log("locations:" + locations[i].name + "\n");
+          if(locations[i]["id"] == "rid")
+          {
+            continue; 
+          }
+
+          var distanceandDescription = undefined;
+          totalLocations[counter] = locations[i];
+          totalLocationNames[counter] =locations[i].name;
+          var x = $.inArray(locations[i].name,totalLocationNames,0);
+          if(x > -1 && x != counter)
+          {
+            //if (locations[x].vicinity.length == 0 && locations[i].vicinity.length == 0) break; 
+            locations[i].vicinity = locations[i].vicinity.replace(/[0-9#]/g, '');
+            locations[i].vicinity = locations[i].vicinity.substr(0,locations[i].vicinity.indexOf(','));
+            distanceandDescription = currentDistances[i].toFixed(2) + "<br>" + "<p id=\"withDescription\">" + "(" + locations[i].vicinity + ")" + "</p>";
+            totalLocations[counter]["distance"] = distanceandDescription;
+          }
+        else 
+        {
+          totalLocations[counter]["distance"] = currentDistances[i].toFixed(2);
+          
+        }  
+        
+          if(locations[i].rating == undefined) 
+            locations[i].rating = "No Reviews Yet";
+           if(distanceandDescription == undefined)
+           {
+            
+            distanceandDescription = currentDistances[i].toFixed(2);           
+            
+          }
+            document.getElementById("firstData").innerHTML += "<tr class=\"rowborder\">" + "<td id=\"bold\">" + "<p>" + locations[i].name + "</p>" + "</td>" + "<td data-title=\"Rating:\" class=\"ratingSize\">" +  "<p>" + locations[i].rating + "</p>" + "</td>" + "<td data-title=\"Distance:\" class=\"distanceSize\">"  +  "<p>" + distanceandDescription + "</p>" +  "</td>" + "</tr>";
+            
+        }
+        
+        progressBar(callCount);
+        //fills the progress bar because there are no more locations available
+        $("#dataTable").trigger("update");
+        if(info.hasNextPage === false)
+        {
+          progressBar(3);
+        }
+         
+        
+        clickModal();
+  }
+   function progressBar(callCount)
+  {
+    if (callCount == 1)
+      {
+        document.getElementById('activeBar').style.width = "33.3%";
+      }
+    else if (callCount == 2)
+      {
+        console.log("cheese");
+        document.getElementById('activeBar').style.width = "66.6%"; 
+      }
+    else
+      {
+        document.getElementById('activeBar').style.width = "100%"; 
+        $("#activeBar").delay(1000).fadeOut("slow", function()
+          {
+            $("#bar").css('visibility','hidden');
+        });
+        //setTimeout(function(){grabclosePlaces();},5000);
+      }
   }
   function parseReviews()
   {
@@ -185,7 +331,7 @@ function callback(results, status, info)
     {
       if(tableDesc[2].innerHTML == totalLocations[i].distance)
       {
-        //var id = "'"+totalLocations[i].place_id + "'";
+        
         var request = 
         {
           placeId: totalLocations[i].place_id
@@ -223,7 +369,7 @@ function callback(results, status, info)
   
   function moreInfo(allResults)
   {
-    
+    console.log(allResults)
     $(".reviewrows").click(function(){
 
       //clicked results object is the children of the tr, so the author text and rating td's 
@@ -240,85 +386,7 @@ function callback(results, status, info)
     });
   }
 
-  function parseLocations(locations,callCount,info)
-  {
-    //this attaches a back to top event when the up arrow is pressed.
-    
-    changeSearch();
-    var counter = 0;
-    if (callCount == 2)
-    {
-        counter = 20;
-    }
-    else if (callCount == 3)
-    {
-      counter = 40;
-    }
-    //console.log("call count" + counter);
-    //~ Use this whenever you want to display object/array arguments.
-    //var tBody = ["firstData","secondData","thirdData"];
-    var currentDistances = calculateDistance(locations,latitude,longitude);
-    for (var i = 0; i < locations.length; i++, counter++)
-        { 
-          var distanceandDescription = undefined;
-          totalLocations[counter] = locations[i];
-          totalLocationNames[counter] =locations[i].name;
-          var x = $.inArray(locations[i].name,totalLocationNames,0);
-          if(x > -1 && x != counter)
-          {
-            //if (locations[x].vicinity.length == 0 && locations[i].vicinity.length == 0) break; 
-            locations[i].vicinity = locations[i].vicinity.replace(/[0-9#]/g, '');
-            locations[i].vicinity = locations[i].vicinity.substr(0,locations[i].vicinity.indexOf(','));
-            distanceandDescription = currentDistances[i].toFixed(2) + "(" + locations[i].vicinity + ")";
-            totalLocations[counter]["distance"] = distanceandDescription;
-          }
-        else 
-        {
-          totalLocations[counter]["distance"] = currentDistances[i].toFixed(2);
-          
-        }  
-        
-          
-          //console.log("parseLocations:", locations[i].name);
-          if(locations[i].rating == undefined) continue
-           if(distanceandDescription == undefined)
-           {
-            distanceandDescription = currentDistances[i].toFixed(2);           
-          }
-            //document.getElementById(tBody[callCount - 1]).innerHTML += "<tr class=\"rowborder\">" + "<td data-title=\"Name:\" id=\"bold\">" + locations[i].name + "</td>" + "<td data-title=\"Rating:\" class=\"rowSize\">" + "&nbsp&nbsp&nbsp" + + locations[i].rating + "</td>" + "<td data-title=\"Distance:\" class=\"rowSize\">" + distanceandDescription+ "</td>" + "<tr>";
-            document.getElementById("firstData").innerHTML += "<tr class=\"rowborder\">" + "<td data-title=\"Name:\" id=\"bold\">" + "<p>" + locations[i].name + "</p>" + "</td>" + "<td data-title=\"Rating:\" class=\"rowSize\">" + "&nbsp&nbsp&nbsp" + locations[i].rating  + "</td>" + "<td data-title=\"Distance:\" class=\"rowSize\">"  + distanceandDescription + "</td>" + "<tr>";
-        }
-        //document.getElementById(tBody[callCount - 1]).innerHTML +="<tr class=\"space\" style=\"height : 100px; border: 0px;\">" + "</tr>";
-        progressBar(callCount);
-        //fills the progress bar because there are no more locations available
-        $("#dataTable").trigger("update");
-        if(info.hasNextPage === false)
-        {
-          progressBar(3);
-        }
-         
-        
-        clickModal();
-  }
-   function progressBar(callCount)
-  {
-    if (callCount == 1)
-      {
-        document.getElementById('activeBar').style.width = "33.3%";
-      }
-    else if (callCount == 2)
-      {
-        document.getElementById('activeBar').style.width = "66.6%"; 
-      }
-    else
-      {
-        document.getElementById('activeBar').style.width = "100%"; 
-        $("#activeBar").delay(1000).fadeOut("slow", function()
-          {
-            $("#bar").css('visibility','hidden');
-        });
-      }
-  }
+  
 
   function calculateDistance(locations,latitude,longitude)
    {  
