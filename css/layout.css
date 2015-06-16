@@ -101,14 +101,7 @@ div#rowDesc {
   font-weight: 600;
  	
  }
- .rowborder {
- 	border-style: solid;
-    border-width: 5px;
-    border-color: #2780E3;
-    border-radius: 25px;
-    column-width: auto;
- }
- 
+
   /* reflow2 widget only */
   table.ui-table-reflow .ui-table-cell-label.ui-table-cell-label-top {
     display: block;
@@ -217,7 +210,11 @@ tr:nth-child(even)
     right: 30px;
     bottom: 30px;
   }
+  table > tbody > td {
+    border-color: black;
+    border-width: 3px
 
+  }
  }
 
 
@@ -261,10 +258,10 @@ p,h1, h2, h3, h4, h5, h6, #name, #rating, #distance{
 border-collapse: separate;
 border-spacing: 20px;
 }
-.table > tbody > tr > td, .table > thead > tr > th {
+/*.table > tbody > tr > td, .table > thead > tr > th {
   border-top: none;
   border-bottom: 1px solid #ddd;
-}
+}*/
 
 .table > tbody > tr > td:hover {
   background-color: #2780E3;
@@ -285,19 +282,44 @@ border-spacing: 20px;
 }
 #dataTable
 {
-  border: none;
-  border-spacing: 15px;
+  border-spacing: 20px;
   border-collapse: separate; 
+  
+}
+
+.rowborder > td {
+  border-left: 2px solid black;
+  border-right: 2px solid black;
+
+ 
+}
+.rowborder > td:nth-child(1){
+  border-top: 2px solid black;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.rowborder> td:nth-child(3){
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border-bottom: 2px solid black;
+}
+
+tbody > tr {
+  -webkit-box-shadow: 0 10px 6px -6px #777;
+  -moz-box-shadow: 0 10px 6px -6px #777;
+       box-shadow: 0 10px 6px -6px #777;
 }
 
 table.table.table-striped tr.rowborder td {
     background-color: transparent;
 
 }
-tbody > tr > td:nth-child(3)
+
+/*tbody > tr > td:nth-child(3)
 {
-  border-bottom: 3px solid #ddd;
-}
+  border-bottom: 7px solid #ddd;
+}*/
+
 tr.rowborder td 
   .cd-top
   {
@@ -322,6 +344,8 @@ tr.rowborder td
   }
 
 }
+
+
 
 @media (max-width: 800px) {
   
