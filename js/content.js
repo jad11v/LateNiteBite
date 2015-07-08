@@ -1,5 +1,4 @@
   var modalMap;
-  var service;
   var longitude;
   var latitude;
   var totalLocations = new Array();
@@ -12,7 +11,6 @@
   var tableDesc;
   var isDetails = false;
   var userLocation;
-  var currOpenPlace;
   var isMobile = { 
     Android: function() { return navigator.userAgent.match(/Android/i); }, 
     BlackBerry: function() { return navigator.userAgent.match(/BlackBerry/i); }, 
@@ -24,28 +22,27 @@
     $("#firstData > *").click(function()
     {
       
-      var myservice;
+      var service; 
       var combinedDescription;
       var phoneRequest;
       $('#myModal').modal({
         keyboard: true
       });
       tableDesc = $(this).children();
-      
       for(var i = 0; i < totalLocations.length; i++)
       {
-        if(tableDesc[2].childNodes[1] == undefined )
-          combinedDescription = tableDesc[2].childNodes[0].innerHTML;
-        else
+         //console.log(tableDesc[3].childNodes[0].innerHTML);         
+        //refers to the third column of the row selected, containing the distance.
+        combinedDescription = tableDesc[3].childNodes[0].innerHTML;
+        /*else
         {
-          combinedDescription = tableDesc[2].childNodes[0].innerHTML + tableDesc[2].childNodes[1].outerHTML;
-        }
+          combinedDescription = tableDesc[3].childNodes[0].innerHTML + tableDesc[3].childNodes[1].outerHTML;
+        }*/
 
         if(totalLocations[i].distance == combinedDescription)
         {
-          
-          currLat = totalLocations[i].geometry.location.k;
-          currLong = totalLocations[i].geometry.location.D;
+          currLat = totalLocations[i].geometry.location.A;
+          currLong = totalLocations[i].geometry.location.F;
           var phoneRequest = 
           {
             placeId: totalLocations[i].place_id
@@ -99,7 +96,7 @@ document.getElementById("rowName").innerHTML = tableDesc[0].innerHTML;
 
 /*STARTS here man*/
 $(document).ready(function(){
-    
+   
   //instantiation of arrow back to top
   $('.selectpicker').selectpicker();
 
@@ -111,7 +108,8 @@ $(document).ready(function(){
     cssHeader: 'header',
     widgets : ['stickyHeaders','reflow'],
     headers: {
-      1: {sorter: "digit", string: "zero"}
+      1: {sorter: "digit", string: "zero"},
+      2: {sorter: "digit"},
     },
     widgetOptions : {
     stickyHeaders_attachTo : '.table-responsive',
@@ -121,16 +119,6 @@ $(document).ready(function(){
   }
   });
 });
-
-    document.getElementById("name").onclick = function(){
-    document.getElementById("mobile").innerHTML = "Arranged by name.";
-  }  
-    document.getElementById("rating").onclick = function(){
-    document.getElementById("mobile").innerHTML = "Arranged by rating.";
-  }
-    document.getElementById("distance").onclick = function(){
-    document.getElementById("mobile").innerHTML = "Arranged by distance from your location.";
-  }
 
   if(navigator.geolocation == undefined)
     {
@@ -153,25 +141,25 @@ function changeSearch(){
   }
   function success(position)
   {
+     
     /*latitude and longitude contain the users current location. */
     latitude = position.coords.latitude;
     longitude = position.coords.longitude;
-    //console.log("my latitude "+ latitude);
-    //console.log("my longitude "+ longitude);
     
     initialize();
     
   }
   function error()
   {
+   
     document.getElementById("click").innerHTML = "Could not retrieve your current location";
     document.getElementById("mobile").innerHTML = "Try enabling location services on your device.";
   }
 
 function initialize() 
   {
+      
       userLocation = new google.maps.LatLng(latitude,longitude);
-      itemCount = 0;
       var request = 
         {
           /*don't be a dummy tallahassee is a variable name, but its not that anymore, but you want this to be here forever */
@@ -204,7 +192,6 @@ function grabclosePlaces()
  
   function callback(results, status, info) 
   {
-    console.log("results" + results + "/n" + "status" + status );
     
     if(info.hasNextPage === true) 
         {
@@ -226,7 +213,11 @@ function grabclosePlaces()
   {
     //this attaches a back to top event when the up arrow is pressed.
    
+  
+   var hourRequest = {}
+   var locationClosingTime; 
    changeSearch();
+   var starHTML, decimal;
     var counter = 0;
     if (callCount == 2)
     {
@@ -254,15 +245,14 @@ function grabclosePlaces()
     var currentDistances = calculateDistance(locations,latitude,longitude);
     for (var i = 0; i < locations.length; i++, counter++)
         { 
-          console.log("locations:" + locations[i].name + "\n");
           if(locations[i]["id"] == "rid")
           {
             continue; 
           }
-
-          var distanceandDescription = undefined;
           totalLocations[counter] = locations[i];
           totalLocationNames[counter] =locations[i].name;
+          /*var distanceandDescription = undefined;
+          
           var x = $.inArray(locations[i].name,totalLocationNames,0);
           if(x > -1 && x != counter)
           {
@@ -271,22 +261,38 @@ function grabclosePlaces()
             locations[i].vicinity = locations[i].vicinity.substr(0,locations[i].vicinity.indexOf(','));
             distanceandDescription = currentDistances[i].toFixed(2) + "<br>" + "<p id=\"withDescription\">" + "(" + locations[i].vicinity + ")" + "</p>";
             totalLocations[counter]["distance"] = distanceandDescription;
-          }
-        else 
-        {
+          }*/
+        //else 
+        //{
           totalLocations[counter]["distance"] = currentDistances[i].toFixed(2);
           
-        }  
+        //}  
         
-          if(locations[i].rating == undefined) 
-            locations[i].rating = "No Reviews Yet";
-           if(distanceandDescription == undefined)
+            
+           decimal = locations[i].rating % 1;
+           //console.log("Name:" + locations[i].name + "rating: "+ locations[i].rating + "decimal" + decimal + "Distance: " + locations[i].distance);
+           
+           if(decimal == 0) {
+            starHTML = "<img class=\"starRating\" src=\"../images/" + locations[i].rating + ".0.png" + "\"" + "/>";
+          }
+          else if(decimal <= 0.25)starHTML= "<img class=\"starRating\" src=\"../images/" + Math.floor(locations[i].rating) + ".25.png" + "\"" + "/>";
+          else if(decimal == 0.50)starHTML= "<img class=\"starRating\" src=\"../images/" + Math.floor(locations[i].rating) + ".25.png" + "\"" + "/>";
+          else if(.26 < decimal <= 0.5) starHTML="<img class=\"starRating\" src=\"../images/" + Math.floor(locations[i].rating) + ".5.png" + "\"" + "/>";
+          else if (decimal >= 0.75) starHTML = "<img class=\"starRating\" src=\"../images/" + Math.floor(locations[i].rating) + ".75.png" + "\"" + "/>";
+          if(locations[i].rating == undefined){
+            starHTML = "<p>" + "No Reviews Yet.." + "</p>";
+            decimal = -1;
+           }
+           
+
+           /*if(distanceandDescription == undefined)
            {
             
             distanceandDescription = currentDistances[i].toFixed(2);           
+           }*/
             
-          }
-            document.getElementById("firstData").innerHTML += "<tr class=\"rowborder\">" + "<td id=\"bold\">" + "<p>" + locations[i].name + "</p>" + "</td>" + "<td data-title=\"Rating:\" class=\"ratingSize\">" +  "<p>" + locations[i].rating + "</p>" + "</td>" + "<td data-title=\"Distance:\" class=\"distanceSize\">"  +  "<p>" + distanceandDescription + "</p>" +  "</td>" + "</tr>";
+            document.getElementById("firstData").innerHTML += "<tr class=\"rowborder\">" + "<td id=\"bold\">" + "<p>" + locations[i].name + "</p>" + "</td>" + "<td class=\"ratingSize\">" +  starHTML + "<p class=\"openFor\">" +/* "Closing in" + locationClosingTime + "Hrs." +  */"</p>" + "</td>"  
+            + "<td class=\"distanceborder\">" +"<div>" + "</div>" +"</td>" + "<td class=\"distanceSize\">"  +  "<p>" + locations[i].distance +  "</p>" + "<p>" + "Miles Away" + "</p>" + "<img class=\"placeArrow\" src=\"../images/placeArrow.png\">" +"</td>" + "</tr>";
             
         }
         
@@ -295,12 +301,50 @@ function grabclosePlaces()
         $("#dataTable").trigger("update");
         if(info.hasNextPage === false)
         {
+          
           progressBar(3);
+          setTimeout(searchBar(),1500);
         }
          
         
         clickModal();
   }
+   
+  //this function gets the current day of the week, and the closing hours for each location(for each given day)
+  function parseHours(location)
+  { 
+   
+    var locationClosingTime ={}; 
+    var timetoclose;
+    var date = new Date();
+    var hour = date.getHours();
+    var minutes = date.getMinutes();
+    var day = date.getDay();
+    var noclose = true;
+    var hourRequest = { 
+            placeId: location.place_id
+          };
+          service = new google.maps.places.PlacesService(map);
+          service.getDetails(hourRequest,function(results, status){
+          console.log(status);
+          if(results == null){ 
+            noclose = false;
+            return;
+          }
+          //console.log("location name" + location.name + results.opening_hours.periods[day].close.hours);
+          locationClosingTime.hours = results.opening_hours.periods[day].close.hours;
+          console.log("1:" + locationClosingTime.hours);
+          locationClosingTime.minutes = results.opening_hours.periods[day].close.minutes;
+          });
+         console.log("2:" + locationClosingTime.hours);
+         //(timetoclose <= 1) ? timetoclose = locationClosingTime.minutes - minutes : timetoclose = timetoclose.toString() + (locationClosingTime)
+        
+        console.log(timetoclose);
+        return (noclose == true) ?  timetoclose : "Closing time unlisted";
+
+  }
+
+
    function progressBar(callCount)
   {
     if (callCount == 1)
@@ -309,7 +353,6 @@ function grabclosePlaces()
       }
     else if (callCount == 2)
       {
-        console.log("cheese");
         document.getElementById('activeBar').style.width = "66.6%"; 
       }
     else
@@ -329,13 +372,15 @@ function grabclosePlaces()
     isDetails = true;
     for(var i = 0; i < totalLocations.length; i++)
     {
-      if(tableDesc[2].innerHTML == totalLocations[i].distance)
+      
+      if(tableDesc[3].childNodes[0].innerHTML == totalLocations[i].distance)
       {
         
         var request = 
         {
           placeId: totalLocations[i].place_id
         };
+      console.log("test");
       service = new google.maps.places.PlacesService(map);
       service.getDetails(request,setReviewModal)
       }
@@ -369,7 +414,7 @@ function grabclosePlaces()
   
   function moreInfo(allResults)
   {
-    console.log(allResults)
+    
     $(".reviewrows").click(function(){
 
       //clicked results object is the children of the tr, so the author text and rating td's 
@@ -393,7 +438,7 @@ function grabclosePlaces()
       var distanceArray = new Array();
       for (var i=0; i < locations.length; i++)
       {
-        distanceArray[i] = getDistanceFromLatLonInKm(latitude, longitude, locations[i].geometry.location.k, locations[i].geometry.location.D)
+        distanceArray[i] = getDistanceFromLatLonInKm(latitude, longitude, locations[i].geometry.location.A, locations[i].geometry.location.F)
         //console.log("Distance Value" + distanceArray[i]);
       }
       return distanceArray;
@@ -424,9 +469,10 @@ function grabclosePlaces()
 function navigate()
   {
     
+    
     var mobileMap = "http://maps.google.com/maps?saddr="+latitude + "," + longitude + "&daddr=" + currLat + "," + currLong;
     var x = document.getElementById('vehicle').value;
-    mapUrl = "comgooglemaps://?saddr=" + latitude + "," + longitude + "&daddr=" + currLat + "," + currLong + "&directionsmode=" + x;
+    var  mapUrl = "comgooglemaps://?saddr=" + latitude + "," + longitude + "&daddr=" + currLat + "," + currLong + "&directionsmode=" + x;
     if (isMobile.iOS())
     {
       setTimeout(function () { window.location = mapUrl; }, 25);
@@ -497,4 +543,16 @@ jQuery(document).ready(function($){
     }
 }
 
+function searchBar(){
+    $('#search').css("display", "block");
+  var $rows = $('.rowborder');
+   $ ('#search').keyup(function() {
+    var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+    console.log("value: " + val);
+    $rows.show().filter(function() {
+        var text = $(this).children("#bold").text().replace(/\s+/g, ' ').toLowerCase();
+        return !~text.indexOf(val);
+    }).hide();
+}); 
+}
 

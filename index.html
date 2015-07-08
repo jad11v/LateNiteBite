@@ -42,8 +42,7 @@
                 <option value="bicycling" data-content='<i class="fa fa-bicycle"> <span class="mode">Biking</span></i>'></option>
                 <option value="walking" data-content='<i class="fa fa-paw"> <span class="mode">Walking</span></i>'></option>
             </select>
-        
-      </div>
+        </div>
       <div id="rowDesc">
       <div class="modal-body">
       </div>
@@ -64,30 +63,27 @@
           <h4 class="modal-title">Reviews</h4>
         </div>
         <div class="modal-body">
-        <table class="table-responsive table-striped" id="reviewtable"> 
-          <thead id="headreview"></thead>
-          <tbody id="bodyreview"></tbody>
-          <tfoot></tfoot>
-        </table> 
-      </div>
+        <div id="reviewContent"> 
+        </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           <div id="phoneNumber"></div>
           <button type="button" id="reviewBack" class="btn btn-primary" onclick="flip(true);">Back</button>
         </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-  </div><!-- /.modal -->
+      </div>
+    </div>
+  </div>
+  </div>
    <div class="container">
-    <h3 id="click">Places to eat, that are open right now.</h3>
-    <h4 id="mobile">Arranged by distance from your location.</h4>
+    <h1 id="click">Late Night Bite</h3>
+    <h4 id="mobile">These places are open right now.</h4>
     <div class="row">
     <div class="col-md-2"><p></p></div>
     <div class="col-md-8">
      <div class="progress progress-striped active" id="bar">
       <div class="progress-bar" id="activeBar"></div>
       </div>
-        <table class="ui-table-reflow tablesorter table table-hover" id="dataTable">
+        <input type="text" id="search" placeholder="Type to search">
+        <table class="ui-table-reflow tablesorter table" id="dataTable">
             <colgroup>
               <col width="450"/>
             </colgroup>
