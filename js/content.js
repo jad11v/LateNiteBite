@@ -108,8 +108,7 @@ $(document).ready(function(){
     cssHeader: 'header',
     widgets : ['stickyHeaders','reflow'],
     headers: {
-      1: {sorter: "digit", string: "zero"},
-      2: {sorter: "digit"},
+      2: {sorter: "text"}
     },
     widgetOptions : {
     stickyHeaders_attachTo : '.table-responsive',
@@ -270,7 +269,8 @@ function grabclosePlaces()
         
             
            decimal = locations[i].rating % 1;
-           //console.log("Name:" + locations[i].name + "rating: "+ locations[i].rating + "decimal" + decimal + "Distance: " + locations[i].distance);
+           decimal = Math.floor(decimal * 100 )/100;
+           console.log("Name: " + locations[i].name + "rating: "+ locations[i].rating + " decimal " + decimal + " Distance: " + locations[i].distance);
            
            if(decimal == 0) {
             starHTML = "<img class=\"starRating\" src=\"../images/" + locations[i].rating + ".0.png" + "\"" + "/>";
@@ -362,7 +362,9 @@ function grabclosePlaces()
           {
             $("#bar").css('visibility','hidden');
         });
-        //setTimeout(function(){grabclosePlaces();},5000);
+        /* This is another api call to grab more places to list, this will probably be disabled until i refactor all of the generated html :D D: 
+        setTimeout(function(){grabclosePlaces();},5000);
+        */
       }
   }
   function parseReviews()
